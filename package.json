@@ -1,0 +1,12 @@
+{
+  "name": "puppelion",
+  "version": "0.0.1",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+      "cli",
+      "e2e",
+      "chrome-extension"
+  ]
+}
