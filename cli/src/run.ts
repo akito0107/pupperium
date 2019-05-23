@@ -1,7 +1,6 @@
 import { PathLike } from "fs";
 import { default as produce } from "immer";
 import { reduce } from "p-iteration";
-import { default as pino } from "pino";
 import { default as puppeteer, LaunchOptions } from "puppeteer";
 import {
   default as ffpuppeteer,
@@ -16,8 +15,6 @@ import {
   Scenario
 } from "./main";
 import { ActionHandler, BrowserType, Context } from "./types";
-
-const logger = pino();
 
 export type RunnerOptions = {
   browserType: BrowserType;
@@ -49,14 +46,25 @@ async function getPage(
     : (browser as puppeteer.Browser).newPage();
 }
 
-export const run = async ({
+export async function run({
   browserType,
   scenario,
   handlers,
   imageDir,
   launchOption
-}: RunnerOptions) => {
+}: RunnerOptions) {
   const browser = await getBrowser(browserType, launchOption);
+
+  if (browserType === "ie" && launchOption.defaultViewport) {
+    await (browser as WebDriver)
+      .manage()
+      .window()
+      .setRect({
+        width: launchOption.defaultViewport.width,
+        height: launchOption.defaultViewport.height
+      });
+  }
+
   const page = await getPage(browserType, browser);
 
   const initialContext: Context = {
@@ -69,27 +77,56 @@ export const run = async ({
     iterations: [{ steps: [] }]
   };
 
-  const precondition = scenario.precondition;
-  logger.info("precondition start.");
-  const context: Context = precondition
-    ? await handlePrecondition(page, handlers, scenario, {
+  try {
+    const precondition = scenario.precondition;
+    console.log("precondition start.");
+    const context: Context = precondition
+      ? await handlePrecondition(page, handlers, scenario, {
+          imageDir,
+          context: initialContext,
+          browserType
+        })
+      : initialContext;
+    console.log("precondition done.");
+
+    console.log("main scenario end");
+    await handleIteration(page, handlers, scenario, {
+      imageDir,
+      context,
+      browserType
+    });
+    console.log("main scenario end");
+  } catch (e) {
+    console.error(`scenario ${scenario.name} failed`);
+    console.error("dom state -------");
+    const screenshotHandler = handlers.screenshot;
+    await screenshotHandler(
+      page,
+      {
+        action: {
+          type: "screenshot",
+          name: "error",
+          fullPage: true
+        }
+      },
+      {
         imageDir,
-        context: initialContext,
         browserType
-      })
-    : initialContext;
-  logger.info("precondition done.");
+      } as any
+    );
 
-  logger.info("main scenario end");
-  await handleIteration(page, handlers, scenario, {
-    imageDir,
-    context,
-    browserType
-  });
-  logger.info("main scenario end");
+    const dumpHandler = handlers.dump;
+    await dumpHandler(page, { action: { type: "dump" } });
 
-  await browser.close();
-};
+    console.error("-----------------");
+    console.error(e);
+  } finally {
+    await browser.close();
+    if (browserType === "ie") {
+      await (browser as WebDriver).quit();
+    }
+  }
+}
 
 type ContextReducer = (ctx: Context, res: any) => Context;
 
@@ -137,8 +174,8 @@ export async function handleIteration<T extends BrowserType>(
   return reduce(
     Array.from({ length: scenario.iteration }),
     async (acc: Context, current: number, idx) => {
-      logger.info(`${idx} th iteration start`);
-      logger.info(`${scenario.name} start`);
+      console.log(`${idx} th iteration start`);
+      console.log(`${scenario.name} start`);
       await handlers.goto(page, {
         action: { type: "goto", url: scenario.url }
       });
@@ -166,6 +203,8 @@ export async function handleIteration<T extends BrowserType>(
   );
 }
 
+const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
+
 export async function handleAction<T extends BrowserType>(
   iteration: number,
   page: BrowserPage<T>,
@@ -182,7 +221,7 @@ export async function handleAction<T extends BrowserType>(
     steps,
     async (acc: Context, step) => {
       const action = step.action;
-      logger.info(action);
+      console.log(action);
       const handler = handlers[action.type];
       if (!handler) {
         throw new Error(`unknown action type: ${(action as any).type}`);
@@ -195,6 +234,10 @@ export async function handleAction<T extends BrowserType>(
         imageDir,
         browserType
       });
+
+      if (browserType === "ie") {
+        await sleep(1000);
+      }
       return reducer(acc, res);
     },
     context

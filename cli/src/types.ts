@@ -54,7 +54,8 @@ export type Action =
   | RadioAction
   | ScreenshotAction
   | GotoAction
-  | ClearAction;
+  | ClearAction
+  | DumpAction;
 
 type Value =
   | string
@@ -72,7 +73,8 @@ export type ActionName =
   | "radio"
   | "screenshot"
   | "goto"
-  | "clear";
+  | "clear"
+  | "dump";
 
 export type ActionType<T extends ActionName> = T extends "input"
   ? InputAction
@@ -92,6 +94,8 @@ export type ActionType<T extends ActionName> = T extends "input"
   ? GotoAction
   : T extends "clear"
   ? ClearAction
+  : T extends "dump"
+  ? DumpAction
   : never;
 
 type Constrains = {
@@ -122,6 +126,7 @@ export type ClickAction = {
     type: "click";
     selector: string;
     navigation: boolean;
+    avoidClear: boolean;
   };
 };
 
@@ -153,6 +158,7 @@ export type ScreenshotAction = {
     meta?: ActionMeta;
     type: "screenshot";
     name: string;
+    fullPage?: boolean;
   };
 };
 
@@ -195,5 +201,12 @@ export type ClearAction = {
     meta?: ActionMeta;
     type: "clear";
     selector: string;
+  };
+};
+
+export type DumpAction = {
+  action: {
+    meta?: ActionMeta;
+    type: "dump";
   };
 };

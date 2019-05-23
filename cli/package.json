@@ -1,6 +1,6 @@
 {
-  "name": "pprunner",
-  "version": "0.4.3",
+  "name": "@puppelion/cli",
+  "version": "0.5.0",
   "main": "lib/main.js",
   "types": "lib/main.d.ts",
   "repository": "akito0107/pprunner",
@@ -10,7 +10,7 @@
     "email": "akito0107@gmail.com"
   },
   "bin": {
-    "puppeteer-runner": "lib/bin/cli.js"
+    "puppelion": "lib/bin/cli.js"
   },
   "scripts": {
     "lint": "tslint ./src/**/*.ts ./src/*.ts",
@@ -56,6 +56,7 @@
     "js-yaml": "^3.12.1",
     "p-iteration": "^1.1.8",
     "pino": "^5.11.1",
+    "pretty": "^2.0.0",
     "puppeteer": "^1.12.2",
     "puppeteer-firefox": "^0.5.0",
     "randexp": "^0.5.3",
