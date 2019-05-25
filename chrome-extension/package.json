@@ -1,6 +1,23 @@
 {
   "name": "@puppelion/chrome-extension",
   "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT"
+  "main": "lib/main.js",
+  "types": "lib/main.d.ts",
+  "repository": "akito0107/puppelion",
+  "license": "apache-2.0",
+  "author": {
+    "name": "Akito Ito",
+    "email": "akito0107@gmail.com"
+  },
+  "scripts": {
+    "lint": "tslint ./src/**/*.ts ./src/*.ts",
+    "lint:fix": "tslint --fix ./src/**/*.ts ./src/*.ts",
+    "clean": "rimraf ./lib/*",
+    "build": "yarn clean && tsc --outDir lib",
+    "watch": "yarn clean && tsc --outDir lib --watch",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.86"
+  }
 }
