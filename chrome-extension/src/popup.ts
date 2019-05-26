@@ -1,15 +1,29 @@
-let changeColor = document.getElementById('changeColor');
+const changeColor = document.getElementById("changeColor");
 
-changeColor.onclick = function(element) {
-  let color = (element.target as any).value;
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    chrome.tabs.executeScript(
-      tabs[0].id,
-      {code: 'document.body.style.backgroundColor = "' + color + '";'});
+changeColor.onclick = element => {
+  const color = (element.target as any).value;
+  chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+    chrome.tabs.executeScript(tabs[0].id, {
+      code: 'document.body.style.backgroundColor = "' + color + '";'
+    });
   });
 };
 
-chrome.storage.sync.get('color', function(data) {
-  changeColor.style.backgroundColor = data.color;
-  changeColor.setAttribute('value', data.color);
-});
+enum LoggingState {
+  Started = 1,
+  Stopped
+}
+const state: LoggingState = LoggingState.Started;
+
+const startLogging = document.getElementById("startLogging");
+
+startLogging.onclick = () => {
+  if (state === LoggingState.Started) {
+    console.log("already started");
+    return;
+  }
+
+  chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+    chrome.tabs.executeScript(tabs[0].id, {});
+  });
+};

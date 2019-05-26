@@ -1,5 +1,5 @@
 {
-  "name": "@puppelion/cli",
+  "name": "@pupperium/cli",
   "version": "0.5.0",
   "main": "lib/main.js",
   "types": "lib/main.d.ts",
@@ -10,7 +10,7 @@
     "email": "akito0107@gmail.com"
   },
   "bin": {
-    "puppelion": "lib/bin/cli.js"
+    "pupperium": "lib/bin/cli.js"
   },
   "scripts": {
     "lint": "tslint ./src/**/*.ts ./src/*.ts",

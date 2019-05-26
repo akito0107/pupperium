@@ -1,9 +1,9 @@
 {
-  "name": "@puppelion/chrome-extension",
+  "name": "@pupperium/chrome-extension",
   "version": "1.0.0",
   "main": "lib/main.js",
   "types": "lib/main.d.ts",
-  "repository": "akito0107/puppelion",
+  "repository": "akito0107/pupperium",
   "license": "apache-2.0",
   "author": {
     "name": "Akito Ito",
@@ -18,6 +18,10 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@types/chrome": "^0.0.86"
+    "@types/chrome": "^0.0.86",
+    "prettier": "^1.17.1",
+    "tslint": "^5.16.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-plugin-prettier": "^2.0.1"
   }
 }
