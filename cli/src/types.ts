@@ -38,7 +38,7 @@ export type Scenario = {
   name: string;
   iteration: number;
   url: string;
-  precondition: {
+  precondition?: {
     url: string;
     steps: Action[];
   };
@@ -61,6 +61,8 @@ type Value =
   | string
   | {
       faker: string;
+    }
+  | {
       date: string;
     };
 

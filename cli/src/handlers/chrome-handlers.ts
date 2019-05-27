@@ -18,13 +18,14 @@ export const inputHandler: ActionHandler<"input", "chrome"> = async (
 
       return { meta: action.meta, value: input.value };
     }
-    if (input.value.faker) {
+
+    if ("faker" in input.value) {
       const fake = faker.fake(`{{${input.value.faker}}}`);
       await page.type(input.selector, fake);
 
       return { meta: action.meta, value: fake };
     }
-    if (input.value.date) {
+    if ("date" in input.value) {
       const dateStr = `00${input.value.date}`;
       await page.type(input.selector, dateStr);
 

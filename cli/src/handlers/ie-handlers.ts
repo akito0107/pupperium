@@ -21,13 +21,13 @@ export const inputHandler: ActionHandler<"input", "ie"> = async (
 
       return { meta: action.meta, value: input.value };
     }
-    if (input.value.faker) {
+    if ("faker" in input.value) {
       const fake = faker.fake(`{{${input.value.faker}}}`);
       await target.sendKeys(fake);
 
       return { meta: action.meta, value: fake };
     }
-    if (input.value.date) {
+    if ("date" in input.value) {
       const d = new Date(input.value.date);
       const date = d.getDate();
       const month = d.getMonth() + 1;
