@@ -1,1 +1,1 @@
-declare function logging(): void;
+import "chrome-extension-async";

@@ -1,27 +1,51 @@
-enum LoggingState {
-  Started = 1,
-  Stopped
-}
-let state: LoggingState = LoggingState.Stopped;
+import "chrome-extension-async";
+import { EVENT_KEY, EventType, LoggingState, STATE_KEY } from "./keys";
 
-const STATE = "logging-state";
+const startLoggingButton = document.getElementById("startLogging");
+const stopLoggingButton = document.getElementById("stopLogging");
 
-const startLogging = document.getElementById("startLogging");
-console.log(startLogging);
+startLoggingButton.onclick = () => {
+  startLogging().then();
+};
 
-startLogging.onclick = () => {
-  chrome.storage.local.get([STATE], result => {
-    if (result[STATE] && result[STATE] === LoggingState.Started) {
-      console.log("already started");
-      return;
+stopLoggingButton.onclick = () => {
+  stopLogging().then();
+};
+
+async function startLogging() {
+  const result = await chrome.storage.local.get([STATE_KEY]);
+  if (result[STATE_KEY] && result[STATE_KEY] === LoggingState.Started) {
+    console.log("already started");
+    return;
+  }
+
+  console.log("start logging");
+  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+  await chrome.tabs.sendMessage(tabs[0].id, {
+    type: EventType.Start
+  });
+
+  const url = tabs[0].url;
+  await chrome.storage.local.set({
+    [EVENT_KEY]: {
+      url,
+      events: []
     }
   });
-  console.log("start logging");
 
-  chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
-    chrome.tabs.sendMessage(tabs[0].id, { type: "startLogging" }, response => {
-      console.log(response);
-    });
+  await chrome.storage.local.set({ [STATE_KEY]: LoggingState.Started });
+}
+
+async function stopLogging() {
+  const result = await chrome.storage.local.get([STATE_KEY]);
+  if (!result[STATE_KEY] || result[STATE_KEY] === LoggingState.Stopped) {
+    console.log("state is stopped");
+    return;
+  }
+  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+  await chrome.tabs.sendMessage(tabs[0].id, {
+    type: EventType.Stop
   });
-  state = LoggingState.Started;
-};
+
+  await chrome.storage.local.set({ [STATE_KEY]: LoggingState.Stopped });
+}
