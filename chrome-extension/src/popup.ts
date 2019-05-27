@@ -4,14 +4,18 @@ enum LoggingState {
 }
 let state: LoggingState = LoggingState.Stopped;
 
+const STATE = "logging-state";
+
 const startLogging = document.getElementById("startLogging");
 console.log(startLogging);
 
 startLogging.onclick = () => {
-  if (state === LoggingState.Started) {
-    console.log("already started");
-    return;
-  }
+  chrome.storage.local.get([STATE], result => {
+    if (result[STATE] && result[STATE] === LoggingState.Started) {
+      console.log("already started");
+      return;
+    }
+  });
   console.log("start logging");
 
   chrome.tabs.query({ active: true, currentWindow: true }, tabs => {

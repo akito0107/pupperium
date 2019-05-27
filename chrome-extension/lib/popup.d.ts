@@ -3,4 +3,5 @@ declare enum LoggingState {
     Stopped = 2
 }
 declare let state: LoggingState;
+declare const STATE = "logging-state";
 declare const startLogging: HTMLElement;
