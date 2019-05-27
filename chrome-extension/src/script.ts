@@ -8,19 +8,20 @@ import {
   SelectAction
 } from "@pupperium/cli";
 
-import { default as yaml } from "js-yaml";
+import * as YAML from "yamljs";
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === EventType.Start) {
     inputLogging();
     sendResponse("started");
-    return;
+    return true;
   }
 
   if (message.type === EventType.Stop) {
-    printEvents().then();
-    sendResponse("printed");
-    return;
+    generateScenario().then(yamlstr => {
+      sendResponse(yamlstr);
+    });
+    return true;
   }
 });
 
@@ -29,7 +30,6 @@ function inputLogging() {
   const forms = document.querySelectorAll("input");
   const textareas = document.querySelectorAll("textarea");
   const selects = document.querySelectorAll("select");
-  console.log(forms);
 
   const logging = inputs => {
     inputs.forEach((f: HTMLInputElement) => {
@@ -77,15 +77,6 @@ async function appendEvent(ev) {
 
   await chrome.storage.local.set({
     [EVENT_KEY]: newLogs
-  });
-}
-
-async function printEvents() {
-  const logs = await chrome.storage.local.get([EVENT_KEY]);
-
-  console.log(logs);
-  logs[EVENT_KEY].events.forEach(e => {
-    console.log(e);
   });
 }
 
@@ -180,7 +171,5 @@ async function generateScenario() {
     steps: events
   };
 
-  const yamlstr = yaml.safeDump(scenario);
-
-  console.log(yamlstr);
+  return YAML.stringify(scenario, 100);
 }

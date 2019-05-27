@@ -43,9 +43,21 @@ async function stopLogging() {
     return;
   }
   const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-  await chrome.tabs.sendMessage(tabs[0].id, {
+  const response = await chrome.tabs.sendMessage(tabs[0].id, {
     type: EventType.Stop
   });
 
+  download(response);
+
   await chrome.storage.local.set({ [STATE_KEY]: LoggingState.Stopped });
+}
+
+function download(body) {
+  const atag = document.createElement("a");
+  const blob = new Blob([body], { type: "text/plain" });
+  atag.href = URL.createObjectURL(blob);
+  atag.target = "_blank";
+  atag.download = "pupperium.yaml";
+
+  atag.click();
 }
