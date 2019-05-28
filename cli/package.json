@@ -12,6 +12,9 @@
   "bin": {
     "pupperium": "lib/bin/cli.js"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "lint": "tslint ./src/**/*.ts ./src/*.ts",
     "lint:fix": "tslint --fix ./src/**/*.ts ./src/*.ts",

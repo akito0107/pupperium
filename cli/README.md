@@ -2,8 +2,6 @@
 
 [puppeteer](https://github.com/GoogleChrome/puppeteer) runner.
 
-[![npm version](https://badge.fury.io/js/pprunner.svg)](https://badge.fury.io/js/pprunner) [![Greenkeeper badge](https://badges.greenkeeper.io/akito0107/pprunner.svg)](https://greenkeeper.io/)
-
 ## Getting Started
 
 ### Prerequisites
@@ -12,13 +10,13 @@
 
 ### Installing
 ```
-$ yarn global add pprunner
+$ yarn global add @pupperium/cli
 ```
 
 ## Options
 ```
-$ pprunner --help
-Usage: pprunner [options]
+$ pupperium --help
+Usage: pupperium [options]
 
 Options:
   -V, --version                   output the version number
@@ -37,7 +35,7 @@ You can also run pprunner on Internet Explorer 11 using [selenium-webdriver](htt
 Please run and connect a [selenium-standalone-server](https://www.seleniumhq.org/download/).
 
 ```
- SELENIUM_REMOTE_URL=http://${selenium-server-host}:4444/wd/hub pprunner -b ie -p ${caseDir} -i ${imageDir}
+ SELENIUM_REMOTE_URL=http://${selenium-server-host}:4444/wd/hub pupperium -b ie -p ${caseDir} -i ${imageDir}
 ```
 
 ## License
