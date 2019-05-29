@@ -26,7 +26,7 @@ import os from "os";
 const numCPUs = os.cpus().length;
 
 program
-  .version("0.0.1")
+  .version("0.6.2")
   .option("-p, --path <caseDir>", "cases root dir")
   .option("-i, --image-dir <imgDir>", "screehshots dir")
   .option("-e, --extension-dir <exDir>", "extensions dir")
@@ -37,6 +37,7 @@ program
   )
   .option("-h, --disable-headless", "disable headless mode")
   .option("-b, --browser <targetBrowser>", "target browser (default = chrome)")
+  .option("--args <puppeteerArgs>")
   .parse(process.argv);
 
 process.on("unhandledRejection", err => {
@@ -51,6 +52,7 @@ type CliOptions = {
 } & RunningOptions;
 
 type RunningOptions = {
+  puppeteerArgs: string[];
   imageDir: string;
   targetScenarios: string[];
   handlers: { [key in ActionName]: ActionHandler<key, BrowserType> };
@@ -110,7 +112,14 @@ async function main(pg) {
 
 async function pprun({
   file,
-  options: { targetScenarios, handlers, imageDir, headlessFlag, browserType }
+  options: {
+    targetScenarios,
+    handlers,
+    imageDir,
+    headlessFlag,
+    browserType,
+    puppeteerArgs
+  }
 }: {
   file: PathLike;
   options: RunningOptions;
@@ -141,8 +150,10 @@ async function pprun({
     return;
   }
 
+  const args = ["--no-sandbox", "--disable-setuid-sandbox", ...puppeteerArgs];
+
   const launchOption = {
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    args,
     headless: headlessFlag,
     ignoreHTTPSErrors: true,
     defaultViewport: doc.defaultViewport
@@ -183,8 +194,12 @@ function prepare(pg): CliOptions {
     ...extensions
   };
 
+  const puppeteerArgs =
+    pg.puppeteerArgs !== "" ? pg.puppeteerArgs.splic(",") : [];
+
   return {
     browserType: pg.browser || "chrome",
+    puppeteerArgs,
     handlers,
     headlessFlag: !pg.disableHeadless,
     imageDir,
