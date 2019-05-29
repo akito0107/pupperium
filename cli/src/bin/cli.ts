@@ -26,7 +26,7 @@ import os from "os";
 const numCPUs = os.cpus().length;
 
 program
-  .version("0.6.4")
+  .version("0.6.5")
   .option("-p, --path <caseDir>", "cases root dir")
   .option("-i, --image-dir <imgDir>", "screehshots dir")
   .option("-e, --extension-dir <exDir>", "extensions dir")
@@ -37,7 +37,7 @@ program
   )
   .option("-h, --disable-headless", "disable headless mode")
   .option("-b, --browser <targetBrowser>", "target browser (default = chrome)")
-  .option("--args <puppeteerArgs>")
+  .option("--puppeteer-args <puppeteerArgs>")
   .parse(process.argv);
 
 process.on("unhandledRejection", err => {
@@ -194,7 +194,10 @@ function prepare(pg): CliOptions {
     ...extensions
   };
 
-  const puppeteerArgs = pg.args && pg.args !== "" ? pg.args.split(",") : [];
+  const puppeteerArgs =
+    pg.puppeteerArgs && pg.puppeteerArgs !== ""
+      ? pg.puppeteerArgs.split(",")
+      : [];
 
   return {
     browserType: pg.browser || "chrome",
