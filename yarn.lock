@@ -1000,6 +1000,26 @@
     prop-types "^15.6.0"
     react-is "^16.6.3"
 
+"@pupperium/cli@0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@pupperium/cli/-/cli-0.5.0.tgz#8d29de48cfcb6b57794ade6c69afa2e4ca4662f5"
+  integrity sha512-C/FAf/m/YUjUhpa9RE+vadJVESRIm9N07r5iWN+vTsprByZfBiC1lnfUIyfWYgylBDTwCKlKmV+TcPwwmxG/AA==
+  dependencies:
+    commander "^2.19.0"
+    debug "^4.1.1"
+    faker "^4.1.0"
+    handlebars "^4.1.0"
+    immer "^3.0.0"
+    js-yaml "^3.13.1"
+    p-iteration "^1.1.8"
+    pretty "^2.0.0"
+    puppeteer "^1.12.2"
+    puppeteer-firefox "^0.5.0"
+    randexp "^0.5.3"
+    recursive-readdir "^2.2.2"
+    selenium-webdriver "^4.0.0-alpha.1"
+    source-map-support "^0.5.12"
+
 "@types/accepts@*":
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/@types/accepts/-/accepts-1.3.5.tgz#c34bec115cfc746e04fe5a059df4ce7e7b391575"

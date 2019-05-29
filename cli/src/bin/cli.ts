@@ -195,7 +195,7 @@ function prepare(pg): CliOptions {
   };
 
   const puppeteerArgs =
-    pg.puppeteerArgs !== "" ? pg.puppeteerArgs.splic(",") : [];
+    pg.puppeteerArgs !== "" ? pg.puppeteerArgs.split(",") : [];
 
   return {
     browserType: pg.browser || "chrome",
