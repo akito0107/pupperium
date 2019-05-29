@@ -26,7 +26,7 @@ import os from "os";
 const numCPUs = os.cpus().length;
 
 program
-  .version("0.6.2")
+  .version("0.6.4")
   .option("-p, --path <caseDir>", "cases root dir")
   .option("-i, --image-dir <imgDir>", "screehshots dir")
   .option("-e, --extension-dir <exDir>", "extensions dir")
@@ -194,8 +194,7 @@ function prepare(pg): CliOptions {
     ...extensions
   };
 
-  const puppeteerArgs =
-    pg.puppeteerArgs !== "" ? pg.puppeteerArgs.split(",") : [];
+  const puppeteerArgs = pg.args && pg.args !== "" ? pg.args.split(",") : [];
 
   return {
     browserType: pg.browser || "chrome",
