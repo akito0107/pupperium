@@ -164,10 +164,6 @@ async function generateScenario() {
     name: "chrome-extension",
     iteration: 1,
     url,
-    precondition: {
-      url: "",
-      steps: []
-    },
     steps: events
   };
 
