@@ -20,15 +20,23 @@ async function startLogging() {
   }
 
   console.log("start logging");
+  const scenarioName = (document.getElementById(
+    "scenarioName"
+  ) as HTMLInputElement).value;
+  console.log(scenarioName)
   const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
   await chrome.tabs.sendMessage(tabs[0].id, {
-    type: EventType.Start
+    type: EventType.Start,
+    payload: {
+      scenarioName
+    }
   });
 
   const url = tabs[0].url;
   await chrome.storage.local.set({
     [EVENT_KEY]: {
       url,
+      scenarioName,
       events: []
     }
   });
@@ -47,17 +55,19 @@ async function stopLogging() {
     type: EventType.Stop
   });
 
-  download(response);
+  const ev = await chrome.storage.local.get([EVENT_KEY]);
+
+  download(response, ev[EVENT_KEY].scenarioName);
 
   await chrome.storage.local.set({ [STATE_KEY]: LoggingState.Stopped });
 }
 
-function download(body) {
+function download(body, filename) {
   const atag = document.createElement("a");
   const blob = new Blob([body], { type: "text/plain" });
   atag.href = URL.createObjectURL(blob);
   atag.target = "_blank";
-  atag.download = "pupperium.yaml";
+  atag.download = `${filename}.yaml`;
 
   atag.click();
 }

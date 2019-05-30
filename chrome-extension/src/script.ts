@@ -83,7 +83,7 @@ async function appendEvent(ev) {
 async function generateScenario() {
   const logs = await chrome.storage.local.get([EVENT_KEY]);
 
-  const url = await logs[EVENT_KEY].url;
+  const url = logs[EVENT_KEY].url;
 
   const events: Action[] = logs[EVENT_KEY].events.map(e => {
     switch (e.type) {
@@ -161,7 +161,7 @@ async function generateScenario() {
   });
 
   const scenario: Scenario = {
-    name: "chrome-extension",
+    name: logs[EVENT_KEY].scenarioName,
     iteration: 1,
     url,
     steps: events
