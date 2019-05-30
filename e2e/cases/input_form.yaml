@@ -8,11 +8,11 @@ precondition:
   steps:
     - action:
         type: click
-        selector: 'button[data-test-target="expand-link"]'
+        selector: 'button[data-testid="expand-link"]'
     - action:
         type: click
         navigation: true
-        selector: 'a[data-test-target="click-point"]'
+        selector: 'a[data-testid="click-point"]'
     - action:
         type: wait
         duration: 500

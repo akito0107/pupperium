@@ -94,14 +94,14 @@ function Page() {
               onClick={() => setExpanded(!expanded)}
               aria-expanded={expanded}
               aria-label="Show more"
-              data-test-target="expand-link"
+              data-testid="expand-link"
             >
               <ExpandMoreIcon />
             </IconButton>
           </CardActions>
           <Collapse in={expanded} timeout="auto" unmountOnExit={true}>
             <Link href={`/form`}>
-              <a data-test-target="click-point">show form</a>
+              <a data-testid="click-point">show form</a>
             </Link>
           </Collapse>
         </Card>

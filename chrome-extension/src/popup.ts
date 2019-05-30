@@ -23,7 +23,7 @@ async function startLogging() {
   const scenarioName = (document.getElementById(
     "scenarioName"
   ) as HTMLInputElement).value;
-  console.log(scenarioName)
+  console.log(scenarioName);
   const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
   await chrome.tabs.sendMessage(tabs[0].id, {
     type: EventType.Start,

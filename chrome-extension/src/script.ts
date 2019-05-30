@@ -1,18 +1,21 @@
-import "chrome-extension-async";
-import { EVENT_KEY, EventType } from "./keys";
 import {
   Action,
+  ClickAction,
   InputAction,
   RadioAction,
   Scenario,
+  ScreenshotAction,
   SelectAction
 } from "@pupperium/cli";
 
+import "chrome-extension-async";
 import * as YAML from "yamljs";
+import { EVENT_KEY, EventType } from "./keys";
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === EventType.Start) {
     inputLogging();
+    clickLogging();
     sendResponse("started");
     return true;
   }
@@ -44,7 +47,41 @@ function inputLogging() {
   logging(selects);
 }
 
+function clickLogging() {
+  const buttons = document.querySelectorAll("button");
+  const links = document.querySelectorAll("a");
+
+  const logging = inputs => {
+    inputs.forEach((f: HTMLElement) => {
+      f.addEventListener("click", ev => {
+        appendEvent(ev).then();
+      });
+    });
+  };
+
+  logging(buttons);
+  logging(links);
+}
+
 function parseInputEvent(ev: Event) {
+  if (ev.type === "click") {
+    const mouseEvent = ev as MouseEvent;
+    let elem = document.elementFromPoint(mouseEvent.x, mouseEvent.y);
+    while (elem.localName !== "body") {
+      if (elem.localName === "button" || elem.localName === "a") {
+        break;
+      }
+      elem = elem.parentElement;
+    }
+    const testid = elem.getAttribute("data-testid");
+    console.log(elem);
+    console.log(ev);
+    return {
+      type: "click",
+      elem,
+      testid
+    };
+  }
   const target = ev.target as HTMLInputElement;
   let type = target.getAttribute("type");
   const name = target.getAttribute("name");
@@ -155,16 +192,43 @@ async function generateScenario() {
         };
 
         return radioAction;
+
+      case "click":
+        const clickAction: ClickAction = {
+          action: {
+            type: "click",
+            selector: `${e.elem.localName}["${e.testid}"]`,
+            navigation: false,
+            avoidClear: false
+          }
+        };
+
+        return clickAction;
       default:
         console.error(`unknown error type: ${e.type}`);
     }
   });
 
+  const steps = [];
+
+  const name = logs[EVENT_KEY].scenarioName;
+
+  events.forEach((e, i) => {
+    steps.push(e);
+    const action: ScreenshotAction = {
+      action: {
+        type: "screenshot",
+        name: `${name}_${i}`
+      }
+    };
+    steps.push(action);
+  });
+
   const scenario: Scenario = {
-    name: logs[EVENT_KEY].scenarioName,
+    name,
     iteration: 1,
     url,
-    steps: events
+    steps
   };
 
   return YAML.stringify(scenario, 100);
