@@ -104,18 +104,19 @@ export async function run({
 
   try {
     const precondition = scenario.precondition;
-    console.log("precondition start.");
+    console.log(precondition);
     if (precondition) {
-      context = await handleCondition(page, handlers, scenario.precondition, {
+      console.log("precondition start.");
+      context = await handleCondition(page, handlers, precondition, {
         imageDir,
         context,
         browserType
       });
       await errorHandler(context);
+      console.log("precondition done.");
     }
-    console.log("precondition done.");
 
-    console.log("main scenario end");
+    console.log("main scenario start.");
 
     if (!context.error) {
       context = await handleIteration(page, handlers, scenario, {
@@ -125,7 +126,7 @@ export async function run({
       }).catch<any>(errorHandler);
     }
     await errorHandler(context);
-    console.log("main scenario end");
+    console.log("main scenario end.");
 
     if (scenario.postcondition) {
       await handleCondition(page, handlers, scenario.postcondition, {

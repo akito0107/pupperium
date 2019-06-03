@@ -83,13 +83,11 @@ describe("handleCondition", () => {
         goto: async () => ({})
       } as any,
       {
-        precondition: {
-          steps: [
-            { action: { type: "action1" } },
-            { action: { type: "action2" } },
-            { action: { type: "action3" } }
-          ]
-        }
+        steps: [
+          { action: { type: "action1" } },
+          { action: { type: "action2" } },
+          { action: { type: "action3" } }
+        ]
       } as any,
       { context: { precondition: { steps: [] } } } as any
     );
