@@ -2,10 +2,7 @@ import { PathLike } from "fs";
 import { default as produce } from "immer";
 import { reduce } from "p-iteration";
 import { default as puppeteer, LaunchOptions } from "puppeteer";
-import {
-  default as ffpuppeteer,
-  LaunchOptions as ffLaunchOptions
-} from "puppeteer-firefox";
+import { default as ffpuppeteer } from "puppeteer-firefox";
 import { Builder, WebDriver } from "selenium-webdriver";
 import {
   Action,
@@ -67,7 +64,7 @@ export async function run({
 
   const page = await getPage(browserType, browser);
 
-  const initialContext: Context = {
+  let context: Context = {
     info: {
       options: { browserType, scenario, imageDir, launchOption, handlers },
       name: scenario.name
@@ -77,27 +74,12 @@ export async function run({
     iterations: [{ steps: [] }]
   };
 
-  try {
-    const precondition = scenario.precondition;
-    console.log("precondition start.");
-    const context: Context = precondition
-      ? await handlePrecondition(page, handlers, scenario, {
-          imageDir,
-          context: initialContext,
-          browserType
-        })
-      : initialContext;
-    console.log("precondition done.");
-
-    console.log("main scenario end");
-    await handleIteration(page, handlers, scenario, {
-      imageDir,
-      context,
-      browserType
-    });
-    console.log("main scenario end");
-  } catch (e) {
+  const errorHandler = async (ctx: Context) => {
+    if (!ctx.error) {
+      return;
+    }
     console.error(`scenario ${scenario.name} failed`);
+    console.error(`context: ${ctx}`);
     console.error("dom state -------");
     const screenshotHandler = handlers.screenshot;
     await screenshotHandler(
@@ -111,15 +93,48 @@ export async function run({
       },
       {
         imageDir,
-        browserType
+        browserType,
+        context: ctx
       } as any
     );
 
     const dumpHandler = handlers.dump;
     await dumpHandler(page, { action: { type: "dump" } });
+  };
 
-    console.error("-----------------");
-    console.error(e);
+  try {
+    const precondition = scenario.precondition;
+    console.log(precondition);
+    if (precondition) {
+      console.log("precondition start.");
+      context = await handleCondition(page, handlers, precondition, {
+        imageDir,
+        context,
+        browserType
+      });
+      await errorHandler(context);
+      console.log("precondition done.");
+    }
+
+    console.log("main scenario start.");
+
+    if (!context.error) {
+      context = await handleIteration(page, handlers, scenario, {
+        imageDir,
+        context,
+        browserType
+      }).catch<any>(errorHandler);
+    }
+    await errorHandler(context);
+    console.log("main scenario end.");
+
+    if (scenario.postcondition) {
+      await handleCondition(page, handlers, scenario.postcondition, {
+        imageDir,
+        context,
+        browserType
+      });
+    }
   } finally {
     await browser.close();
     if (browserType === "ie") {
@@ -130,24 +145,26 @@ export async function run({
 
 type ContextReducer = (ctx: Context, res: any) => Context;
 
-export async function handlePrecondition<T extends BrowserType>(
+export async function handleCondition<T extends BrowserType>(
   page: BrowserPage<T>,
   handlers: { [key in ActionName]: ActionHandler<key, T> },
-  scenario: Scenario,
+  condition: { url?: string; steps: Action[] },
   {
     imageDir,
     context,
     browserType
   }: { imageDir: PathLike; context: Context; browserType: T }
 ): Promise<Context> {
-  await handlers.goto(page, {
-    action: { type: "goto", url: scenario.precondition.url }
-  });
+  if (condition.url) {
+    await handlers.goto(page, {
+      action: { type: "goto", url: condition.url }
+    });
+  }
   return handleAction(
     0,
     page,
     handlers,
-    scenario.precondition.steps,
+    condition.steps,
     {
       imageDir,
       context,
@@ -217,29 +234,35 @@ export async function handleAction<T extends BrowserType>(
   }: { imageDir: PathLike; browserType: T; context: Context },
   reducer: ContextReducer
 ): Promise<Context> {
-  return reduce(
-    steps,
-    async (acc: Context, step) => {
-      const action = step.action;
-      console.log(action);
-      const handler = handlers[action.type];
-      if (!handler) {
-        throw new Error(`unknown action type: ${(action as any).type}`);
-      }
-      const res = await handler(page, { action } as any, {
-        context: {
-          ...acc,
-          currentIteration: iteration
-        },
-        imageDir,
-        browserType
-      });
+  for (const step of steps) {
+    const action = step.action;
+    console.log(action);
+    const handler = handlers[action.type];
+    if (!handler) {
+      throw new Error(`unknown action type: ${(action as any).type}`);
+    }
+    const res = await handler(page, { action } as any, {
+      context: {
+        ...context,
+        currentIteration: iteration
+      },
+      imageDir,
+      browserType
+    }).catch(e => {
+      return { error: e };
+    });
 
-      if (browserType === "ie") {
-        await sleep(1000);
-      }
-      return reducer(acc, res);
-    },
-    context
-  );
+    if (res.error) {
+      return {
+        ...context,
+        ...res
+      };
+    }
+
+    if (browserType === "ie") {
+      await sleep(1000);
+    }
+    context = reducer(context, res);
+  }
+  return context;
 }

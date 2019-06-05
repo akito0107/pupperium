@@ -15,6 +15,7 @@ export type Context = {
   iterations: Array<{
     steps: Array<{}>;
   }>;
+  error?: Error;
 };
 
 export type BrowserType = "ie" | "chrome" | "firefox";
@@ -38,10 +39,17 @@ export type Scenario = {
   name: string;
   iteration: number;
   url: string;
-  precondition?: {
-    url: string;
-    steps: Action[];
-  };
+  precondition?: PreCondition;
+  steps: Action[];
+  postcondition?: PostCondition;
+};
+
+export type PreCondition = {
+  url: string;
+  steps: Action[];
+};
+
+export type PostCondition = {
   steps: Action[];
 };
 
