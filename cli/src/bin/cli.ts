@@ -67,7 +67,11 @@ async function main(pg) {
   if (cluster.isMaster) {
     const files = ((await readdir(
       path.resolve(process.cwd(), caseDir)
-    )) as string[]).sort();
+    )) as string[])
+      .sort()
+      .filter(f => {
+        return f.endsWith("yaml") || f.endsWith("yml");
+      });
     if (!parallel) {
       // single thread
       for (const f of files) {
