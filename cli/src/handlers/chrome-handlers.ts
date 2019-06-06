@@ -104,7 +104,7 @@ export const selectHandler: ActionHandler<"select", "chrome"> = async (
       select.selector,
       `${v[Math.floor(Math.random() * v.length)]}`
     );
-    return;
+    return { meta: action.meta, value: v };
   }
   const value = await page.evaluate(selector => {
     return document.querySelector(selector).children[1].value;

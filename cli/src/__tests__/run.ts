@@ -1,6 +1,6 @@
 import { default as produce } from "immer";
 import * as assert from "power-assert";
-import { handleAction, handleCondition, handleIteration } from "../run";
+import { handleAction, handlePreCondition, handleIteration } from "../run";
 
 const handlers = {
   action1: async (page, action, { context }) => {
@@ -66,9 +66,9 @@ describe("handleAction", () => {
   });
 });
 
-describe("handleCondition", () => {
+describe("handlePreCondition", () => {
   test("reduce precondition context", async () => {
-    const result = await handleCondition(
+    const result = await handlePreCondition(
       {} as any,
       {
         action1: async (page, action, { context }) => {

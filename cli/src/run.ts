@@ -71,11 +71,13 @@ export async function run({
     },
     currentIteration: 0,
     precondition: { steps: [] },
-    iterations: [{ steps: [] }]
+    iterations: [{ steps: [] }],
+    postcondition: { steps: [] }
   };
 
   const errorHandler = async (ctx: Context) => {
-    if (ctx && !ctx.error) {
+    console.error(ctx);
+    if (!ctx.error) {
       return;
     }
     console.error(`scenario ${scenario.name} failed`);
@@ -107,7 +109,7 @@ export async function run({
     console.log(precondition);
     if (precondition) {
       console.log("precondition start.");
-      context = await handleCondition(page, handlers, precondition, {
+      context = await handlePreCondition(page, handlers, precondition, {
         imageDir,
         context,
         browserType
@@ -123,13 +125,14 @@ export async function run({
         imageDir,
         context,
         browserType
-      }).catch<any>(errorHandler);
+      });
+
+      await errorHandler(context);
     }
-    await errorHandler(context);
     console.log("main scenario end.");
 
     if (scenario.postcondition) {
-      await handleCondition(page, handlers, scenario.postcondition, {
+      await handlePostCondition(page, handlers, scenario.postcondition, {
         imageDir,
         context,
         browserType
@@ -145,7 +148,7 @@ export async function run({
 
 type ContextReducer = (ctx: Context, res: any) => Context;
 
-export async function handleCondition<T extends BrowserType>(
+export async function handlePreCondition<T extends BrowserType>(
   page: BrowserPage<T>,
   handlers: { [key in ActionName]: ActionHandler<key, T> },
   condition: { url?: string; steps: Action[] },
@@ -173,6 +176,39 @@ export async function handleCondition<T extends BrowserType>(
     (ctx, res) => {
       return produce(ctx, draft => {
         draft.precondition.steps.push(res);
+      });
+    }
+  );
+}
+
+export async function handlePostCondition<T extends BrowserType>(
+  page: BrowserPage<T>,
+  handlers: { [key in ActionName]: ActionHandler<key, T> },
+  condition: { url?: string; steps: Action[] },
+  {
+    imageDir,
+    context,
+    browserType
+  }: { imageDir: PathLike; context: Context; browserType: T }
+): Promise<Context> {
+  if (condition.url) {
+    await handlers.goto(page, {
+      action: { type: "goto", url: condition.url }
+    });
+  }
+  return handleAction(
+    0,
+    page,
+    handlers,
+    condition.steps,
+    {
+      imageDir,
+      context,
+      browserType
+    },
+    (ctx, res) => {
+      return produce(ctx, draft => {
+        draft.postcondition.steps.push(res);
       });
     }
   );

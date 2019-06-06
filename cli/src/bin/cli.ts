@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 // tslint:disable-next-line
-// require("source-map-support").install();
+require("source-map-support").install();
 
 import { default as cluster } from "cluster";
 import { default as program } from "commander";

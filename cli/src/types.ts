@@ -15,6 +15,9 @@ export type Context = {
   iterations: Array<{
     steps: Array<{}>;
   }>;
+  postcondition: {
+    steps: Array<{}>;
+  };
   error?: Error;
 };
 
