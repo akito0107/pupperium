@@ -75,7 +75,7 @@ export async function run({
   };
 
   const errorHandler = async (ctx: Context) => {
-    if (!ctx.error) {
+    if (ctx && !ctx.error) {
       return;
     }
     console.error(`scenario ${scenario.name} failed`);
