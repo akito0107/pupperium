@@ -1,6 +1,6 @@
-# pprunner
+# pupperium
 
-[puppeteer](https://github.com/GoogleChrome/puppeteer) runner.
+[puppeteer](https://github.com/GoogleChrome/puppeteer)/[selenium](https://www.seleniumhq.org) runner.
 
 ## Getting Started
 
@@ -30,7 +30,7 @@ Options:
 ```
 
 ## selenium-webdriver
-You can also run pprunner on Internet Explorer 11 using [selenium-webdriver](https://www.seleniumhq.org/projects/webdriver/).
+You can also run pupperium on Internet Explorer 11 using [selenium-webdriver](https://www.seleniumhq.org/projects/webdriver/).
 
 Please run and connect a [selenium-standalone-server](https://www.seleniumhq.org/download/).
 
