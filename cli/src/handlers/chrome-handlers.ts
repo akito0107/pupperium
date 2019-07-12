@@ -64,6 +64,26 @@ export const clickHandler: ActionHandler<"click", "chrome"> = async (
 ) => {
   await page.waitForSelector(action.selector);
 
+  if (action.emulateMouse) {
+    const elem = await page.$(action.selector);
+    const rect = await page.evaluate(el => {
+      const { top, left, bottom, right } = el.getBoundingClientRect();
+      return { top, left, bottom, right };
+    }, elem);
+
+    const center = (u, d) => {
+      return (u - d) / 2 + d;
+    };
+
+    console.log(rect);
+    await page.mouse.click(
+      center(rect.right, rect.left),
+      center(rect.bottom, rect.top)
+    );
+
+    return { meta: action.meta };
+  }
+
   if (!action.avoidClear) {
     await page.tap("body");
   }

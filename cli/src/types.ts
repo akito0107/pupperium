@@ -140,6 +140,7 @@ export type ClickAction = {
     selector: string;
     navigation: boolean;
     avoidClear: boolean;
+    emulateMouse: boolean;
   };
 };
 
