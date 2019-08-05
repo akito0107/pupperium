@@ -76,7 +76,6 @@ export async function run({
   };
 
   const errorHandler = async (ctx: Context) => {
-    console.error(ctx);
     if (!ctx.error) {
       return;
     }
@@ -285,7 +284,7 @@ export async function handleAction<T extends BrowserType>(
       imageDir,
       browserType
     }).catch(e => {
-      return { error: e };
+      return { error: e, lastAction: action };
     });
 
     if (res.error) {
