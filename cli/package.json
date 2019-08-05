@@ -1,6 +1,6 @@
 {
   "name": "@pupperium/cli",
-  "version": "0.7.3",
+  "version": "0.7.4",
   "main": "lib/main.js",
   "types": "lib/main.d.ts",
   "repository": "akito0107/pprunner",
