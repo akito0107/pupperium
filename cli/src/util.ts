@@ -17,6 +17,10 @@ export function isPuppeteer(browser: any): boolean {
   return browser.newPage !== undefined;
 }
 
+export function isWebDriverType(browserType: string): boolean {
+  return browserType === "ie" || browserType === "edge";
+}
+
 // TODO: contextから取得する
 export function getBrowserType(browser: any): BrowserType {
   return isPuppeteer(browser) ? "chrome" : "ie";

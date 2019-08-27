@@ -17,7 +17,7 @@ import {
   IEHandler,
   run
 } from "../main";
-import { convert } from "../util";
+import { convert, isWebDriverType } from "../util";
 
 import { default as d } from "debug";
 const debug = d("pprunner");
@@ -216,7 +216,7 @@ function prepare(pg): CliOptions {
 }
 
 function getHandlers(browser: BrowserType) {
-  const handlers = browser === "ie" ? IEHandler : ChromeHandler;
+  const handlers = isWebDriverType(browser) ? IEHandler : ChromeHandler;
 
   return {
     clear: handlers.clearHandler,

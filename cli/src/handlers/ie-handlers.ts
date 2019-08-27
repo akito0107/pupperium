@@ -158,12 +158,12 @@ export const ensureHandler: ActionHandler<"ensure", "ie"> = async (
 export const screenshotHandler: ActionHandler<"screenshot", "ie"> = async (
   driver: WebDriver,
   { action },
-  { imageDir }
+  { imageDir, browserType }
 ) => {
   const filename = action.name;
   const now = Date.now();
   const image = await driver.takeScreenshot();
-  const path = `${imageDir}/ie-${now}-${filename}.png`;
+  const path = `${imageDir}/${browserType}-${now}-${filename}.png`;
   await promisify(fs.writeFile)(path, image, "base64");
 
   return { meta: action.meta, value: path };
