@@ -21,13 +21,15 @@ export type Context = {
   error?: Error;
 };
 
-export type BrowserType = "ie" | "chrome" | "firefox";
+export type BrowserType = "ie" | "chrome" | "firefox" | "edge";
 
-export type BrowserEngine<T extends BrowserType> = T extends "ie"
+export type WebDriverType = "ie" | "edge"
+
+export type BrowserEngine<T extends BrowserType> = T extends WebDriverType
   ? WebDriver
   : puppeteer.Browser;
 
-export type BrowserPage<T extends BrowserType> = T extends "ie"
+export type BrowserPage<T extends BrowserType> = T extends WebDriverType
   ? WebDriver
   : puppeteer.Page;
 

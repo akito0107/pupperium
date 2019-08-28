@@ -12,6 +12,7 @@ import {
   Scenario
 } from "./main";
 import { ActionHandler, BrowserType, Context } from "./types";
+import { isWebDriverType } from "./util";
 
 export type RunnerOptions = {
   browserType: BrowserType;
@@ -26,7 +27,9 @@ async function getBrowser(
   opts
 ): Promise<BrowserEngine<BrowserType>> {
   return type === "ie"
-    ? new Builder().forBrowser("internet explorer").build()
+  ? new Builder().forBrowser("internet explorer").build()
+    : type === "edge"
+    ? new Builder().forBrowser("MicrosoftEdge").build()
     : type === "firefox"
     ? ffpuppeteer.launch(opts)
     : puppeteer.launch(opts);
@@ -36,7 +39,7 @@ async function getPage(
   type: BrowserType,
   browser: BrowserEngine<BrowserType>
 ): Promise<BrowserPage<BrowserType>> {
-  return type === "ie"
+  return isWebDriverType(type)
     ? (browser as WebDriver)
     : type === "firefox"
     ? (browser as ffpuppeteer.Browser).newPage()
@@ -52,7 +55,7 @@ export async function run({
 }: RunnerOptions) {
   const browser = await getBrowser(browserType, launchOption);
 
-  if (browserType === "ie" && launchOption.defaultViewport) {
+  if (isWebDriverType(browserType) && launchOption.defaultViewport) {
     await (browser as WebDriver)
       .manage()
       .window()
@@ -139,7 +142,7 @@ export async function run({
     }
   } finally {
     await browser.close();
-    if (browserType === "ie") {
+    if (isWebDriverType(browserType)) {
       await (browser as WebDriver).quit();
     }
   }
@@ -294,7 +297,7 @@ export async function handleAction<T extends BrowserType>(
       };
     }
 
-    if (browserType === "ie") {
+    if (isWebDriverType(browserType)) {
       await sleep(1000);
     }
     context = reducer(context, res);
