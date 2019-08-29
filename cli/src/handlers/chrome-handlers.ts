@@ -64,6 +64,8 @@ export const clickHandler: ActionHandler<"click", "chrome"> = async (
 ) => {
   await page.waitForSelector(action.selector);
 
+  let clickAction = page.$eval(action.selector, s => (s as any).click());
+
   if (action.emulateMouse) {
     const elem = await page.$(action.selector);
     const rect = await page.evaluate(el => {
@@ -75,26 +77,16 @@ export const clickHandler: ActionHandler<"click", "chrome"> = async (
       return (u - d) / 2 + d;
     };
 
-    console.log(rect);
-    await page.mouse.click(
+    clickAction = page.mouse.click(
       center(rect.right, rect.left),
       center(rect.bottom, rect.top)
     );
-
-    return { meta: action.meta };
-  }
-
-  if (!action.avoidClear) {
-    await page.tap("body");
   }
 
   if (action.navigation) {
-    await Promise.all([
-      page.waitForNavigation(),
-      page.$eval(action.selector, s => (s as any).click())
-    ]);
+    await Promise.all([page.waitForNavigation(), clickAction]);
   } else {
-    await page.$eval(action.selector, s => (s as any).click());
+    await clickAction;
   }
 
   return { meta: action.meta };

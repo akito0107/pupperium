@@ -1,6 +1,6 @@
 import { default as produce } from "immer";
 import * as assert from "power-assert";
-import { handleAction, handlePreCondition, handleIteration } from "../run";
+import { handleAction, handleIteration, handlePreCondition } from "../run";
 
 const handlers = {
   action1: async (page, action, { context }) => {
