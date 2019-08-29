@@ -4,6 +4,7 @@ import { reduce } from "p-iteration";
 import { default as puppeteer, LaunchOptions } from "puppeteer";
 import { default as ffpuppeteer } from "puppeteer-firefox";
 import { Builder, WebDriver } from "selenium-webdriver";
+import { inspect } from "util";
 import {
   Action,
   ActionName,
@@ -27,7 +28,7 @@ async function getBrowser(
   opts
 ): Promise<BrowserEngine<BrowserType>> {
   return type === "ie"
-  ? new Builder().forBrowser("internet explorer").build()
+    ? new Builder().forBrowser("internet explorer").build()
     : type === "edge"
     ? new Builder().forBrowser("MicrosoftEdge").build()
     : type === "firefox"
@@ -83,7 +84,7 @@ export async function run({
       return;
     }
     console.error(`scenario ${scenario.name} failed`);
-    console.error(`context: ${ctx}`);
+    console.error(`context: ${inspect(ctx)}`);
     console.error("dom state -------");
     const screenshotHandler = handlers.screenshot;
     await screenshotHandler(

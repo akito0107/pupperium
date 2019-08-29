@@ -23,7 +23,7 @@ export type Context = {
 
 export type BrowserType = "ie" | "chrome" | "firefox" | "edge";
 
-export type WebDriverType = "ie" | "edge"
+export type WebDriverType = "ie" | "edge";
 
 export type BrowserEngine<T extends BrowserType> = T extends WebDriverType
   ? WebDriver
@@ -141,7 +141,6 @@ export type ClickAction = {
     type: "click";
     selector: string;
     navigation: boolean;
-    avoidClear: boolean;
     emulateMouse: boolean;
   };
 };
