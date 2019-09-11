@@ -1,0 +1,1329 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "properties": {
+        "iteration": {
+            "description": "繰り返す回数",
+            "type": "number"
+        },
+        "name": {
+            "description": "シナリオ名. `--target` オプションで指定する.",
+            "type": "string"
+        },
+        "postcondition": {
+            "description": "scenarioがすべて終了した時, もしくは, scenarioが異常終了した時に実行される.\nerror handlingなどのcustom actionを定義して使用する.",
+            "properties": {
+                "steps": {
+                    "description": "actionを記述する.",
+                    "items": {
+                        "anyOf": [
+                            {
+                                "properties": {
+                                    "action": {
+                                        "properties": {
+                                            "form": {
+                                                "properties": {
+                                                    "constrains": {
+                                                        "description": "valueかconstrainsのどちらか片方しか指定できない.\n任意の文字列を入力したい場合はvalueを, 与えた正規表現から任意の文字列を入力したい場合はconstraintsを使う",
+                                                        "properties": {
+                                                            "regexp": {
+                                                                "description": "正規表現を満たすような文字列を自動で出力する.\n\n### example\n```yaml\n- action:\n   type: input\n   form:\n     selector: 'input[name=\"email\"]'\n     constrains:\n       regexp: '([a-z]|[0-9]){5,10}@test\\.com'\n```",
+                                                                "type": "string"
+                                                            },
+                                                            "required": {
+                                                                "type": "boolean"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "selector": {
+                                                        "description": "css selector",
+                                                        "type": "string"
+                                                    },
+                                                    "value": {
+                                                        "anyOf": [
+                                                            {
+                                                                "properties": {
+                                                                    "faker": {
+                                                                        "description": "[faker](https://www.npmjs.com/package/faker) を使う時に使用する.\n\n### example\n```yaml\n- action:\n   type: input\n   form:\n     selector: 'input[name=\"address\"]'\n     value:\n       faker: address.city\n```",
+                                                                        "type": "string"
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            },
+                                                            {
+                                                                "properties": {
+                                                                    "date": {
+                                                                        "description": "input type=\"date\"に入力する場合に使う.\n\n### example\n```yaml\n- action:\n   type: input\n   form:\n     selector: 'input[name=\"birthday\"]'\n     value:\n       date: \"1989-04-01\"\n```",
+                                                                        "type": "string"
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            },
+                                                            {
+                                                                "type": "string"
+                                                            }
+                                                        ],
+                                                        "description": "valueかconstrainsのどちらか片方しか指定できない.\n任意の文字列を入力したい場合はvalueを, 与えた正規表現から任意の文字列を入力したい場合はconstraintsを使う"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "meta": {
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "tag": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "type": {
+                                                "enum": [
+                                                    "input"
+                                                ],
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            {
+                                "properties": {
+                                    "action": {
+                                        "properties": {
+                                            "emulateMouse": {
+                                                "type": "boolean"
+                                            },
+                                            "meta": {
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "tag": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "navigation": {
+                                                "type": "boolean"
+                                            },
+                                            "selector": {
+                                                "type": "string"
+                                            },
+                                            "type": {
+                                                "enum": [
+                                                    "click"
+                                                ],
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            {
+                                "properties": {
+                                    "action": {
+                                        "properties": {
+                                            "form": {
+                                                "properties": {
+                                                    "constrains": {
+                                                        "properties": {
+                                                            "required": {
+                                                                "type": "boolean"
+                                                            },
+                                                            "values": {
+                                                                "items": {
+                                                                    "anyOf": [
+                                                                        {
+                                                                            "properties": {
+                                                                                "faker": {
+                                                                                    "description": "[faker](https://www.npmjs.com/package/faker) を使う時に使用する.\n\n### example\n```yaml\n- action:\n   type: input\n   form:\n     selector: 'input[name=\"address\"]'\n     value:\n       faker: address.city\n```",
+                                                                                    "type": "string"
+                                                                                }
+                                                                            },
+                                                                            "type": "object"
+                                                                        },
+                                                                        {
+                                                                            "properties": {
+                                                                                "date": {
+                                                                                    "description": "input type=\"date\"に入力する場合に使う.\n\n### example\n```yaml\n- action:\n   type: input\n   form:\n     selector: 'input[name=\"birthday\"]'\n     value:\n       date: \"1989-04-01\"\n```",
+                                                                                    "type": "string"
+                                                                                }
+                                                                            },
+                                                                            "type": "object"
+                                                                        },
+                                                                        {
+                                                                            "type": "string"
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "type": "array"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "selector": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "meta": {
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "tag": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "type": {
+                                                "enum": [
+                                                    "select"
+                                                ],
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            {
+                                "properties": {
+                                    "action": {
+                                        "properties": {
+                                            "duration": {
+                                                "type": "number"
+                                            },
+                                            "meta": {
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "tag": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "type": {
+                                                "enum": [
+                                                    "wait"
+                                                ],
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            {
+                                "properties": {
+                                    "action": {
+                                        "properties": {
+                                            "location": {
+                                                "properties": {
+                                                    "regexp": {
+                                                        "type": "string"
+                                                    },
+                                                    "value": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "meta": {
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "tag": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "type": {
+                                                "enum": [
+                                                    "ensure"
+                                                ],
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            {
+                                "properties": {
+                                    "action": {
+                                        "properties": {
+                                            "form": {
+                                                "properties": {
+                                                    "constrains": {
+                                                        "properties": {
+                                                            "required": {
+                                                                "type": "boolean"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "selector": {
+                                                        "type": "string"
+                                                    },
+                                                    "value": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "meta": {
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "tag": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "type": {
+                                                "enum": [
+                                                    "radio"
+                                                ],
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            {
+                                "properties": {
+                                    "action": {
+                                        "properties": {
+                                            "fullPage": {
+                                                "type": "boolean"
+                                            },
+                                            "meta": {
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "tag": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "type": {
+                                                "enum": [
+                                                    "screenshot"
+                                                ],
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            {
+                                "properties": {
+                                    "action": {
+                                        "properties": {
+                                            "meta": {
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "tag": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "type": {
+                                                "enum": [
+                                                    "goto"
+                                                ],
+                                                "type": "string"
+                                            },
+                                            "url": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            {
+                                "properties": {
+                                    "action": {
+                                        "properties": {
+                                            "meta": {
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "tag": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "selector": {
+                                                "type": "string"
+                                            },
+                                            "type": {
+                                                "enum": [
+                                                    "clear"
+                                                ],
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            {
+                                "properties": {
+                                    "action": {
+                                        "properties": {
+                                            "meta": {
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "tag": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "type": {
+                                                "enum": [
+                                                    "dump"
+                                                ],
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        ]
+                    },
+                    "type": "array"
+                }
+            },
+            "type": "object"
+        },
+        "precondition": {
+            "description": "mainのaction(steps)を実行する前に実行するaction. login処理などで用いる.\n\n### example\n```yaml\nname: login\niteration: 1\nurl: http://example.com\nprecondition:\n   url: http://example.com/login\n   steps:\n     - action:\n         type: input\n         form:\n           selector: 'input[name=\"email\"]'\n           value: 'test@test.com'\n     - action:\n         type: input\n         form:\n           selector: 'input[name=\"password\"]'\n           value: 'password'\n     - action:\n         type: click\n         selector: 'button'\n         navigation: true\nsteps:\n     - action:\n         type: ....\n```",
+            "properties": {
+                "steps": {
+                    "description": "ctionを記述する.",
+                    "items": {
+                        "anyOf": [
+                            {
+                                "properties": {
+                                    "action": {
+                                        "properties": {
+                                            "form": {
+                                                "properties": {
+                                                    "constrains": {
+                                                        "description": "valueかconstrainsのどちらか片方しか指定できない.\n任意の文字列を入力したい場合はvalueを, 与えた正規表現から任意の文字列を入力したい場合はconstraintsを使う",
+                                                        "properties": {
+                                                            "regexp": {
+                                                                "description": "正規表現を満たすような文字列を自動で出力する.\n\n### example\n```yaml\n- action:\n   type: input\n   form:\n     selector: 'input[name=\"email\"]'\n     constrains:\n       regexp: '([a-z]|[0-9]){5,10}@test\\.com'\n```",
+                                                                "type": "string"
+                                                            },
+                                                            "required": {
+                                                                "type": "boolean"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "selector": {
+                                                        "description": "css selector",
+                                                        "type": "string"
+                                                    },
+                                                    "value": {
+                                                        "anyOf": [
+                                                            {
+                                                                "properties": {
+                                                                    "faker": {
+                                                                        "description": "[faker](https://www.npmjs.com/package/faker) を使う時に使用する.\n\n### example\n```yaml\n- action:\n   type: input\n   form:\n     selector: 'input[name=\"address\"]'\n     value:\n       faker: address.city\n```",
+                                                                        "type": "string"
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            },
+                                                            {
+                                                                "properties": {
+                                                                    "date": {
+                                                                        "description": "input type=\"date\"に入力する場合に使う.\n\n### example\n```yaml\n- action:\n   type: input\n   form:\n     selector: 'input[name=\"birthday\"]'\n     value:\n       date: \"1989-04-01\"\n```",
+                                                                        "type": "string"
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            },
+                                                            {
+                                                                "type": "string"
+                                                            }
+                                                        ],
+                                                        "description": "valueかconstrainsのどちらか片方しか指定できない.\n任意の文字列を入力したい場合はvalueを, 与えた正規表現から任意の文字列を入力したい場合はconstraintsを使う"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "meta": {
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "tag": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "type": {
+                                                "enum": [
+                                                    "input"
+                                                ],
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            {
+                                "properties": {
+                                    "action": {
+                                        "properties": {
+                                            "emulateMouse": {
+                                                "type": "boolean"
+                                            },
+                                            "meta": {
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "tag": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "navigation": {
+                                                "type": "boolean"
+                                            },
+                                            "selector": {
+                                                "type": "string"
+                                            },
+                                            "type": {
+                                                "enum": [
+                                                    "click"
+                                                ],
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            {
+                                "properties": {
+                                    "action": {
+                                        "properties": {
+                                            "form": {
+                                                "properties": {
+                                                    "constrains": {
+                                                        "properties": {
+                                                            "required": {
+                                                                "type": "boolean"
+                                                            },
+                                                            "values": {
+                                                                "items": {
+                                                                    "anyOf": [
+                                                                        {
+                                                                            "properties": {
+                                                                                "faker": {
+                                                                                    "description": "[faker](https://www.npmjs.com/package/faker) を使う時に使用する.\n\n### example\n```yaml\n- action:\n   type: input\n   form:\n     selector: 'input[name=\"address\"]'\n     value:\n       faker: address.city\n```",
+                                                                                    "type": "string"
+                                                                                }
+                                                                            },
+                                                                            "type": "object"
+                                                                        },
+                                                                        {
+                                                                            "properties": {
+                                                                                "date": {
+                                                                                    "description": "input type=\"date\"に入力する場合に使う.\n\n### example\n```yaml\n- action:\n   type: input\n   form:\n     selector: 'input[name=\"birthday\"]'\n     value:\n       date: \"1989-04-01\"\n```",
+                                                                                    "type": "string"
+                                                                                }
+                                                                            },
+                                                                            "type": "object"
+                                                                        },
+                                                                        {
+                                                                            "type": "string"
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "type": "array"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "selector": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "meta": {
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "tag": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "type": {
+                                                "enum": [
+                                                    "select"
+                                                ],
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            {
+                                "properties": {
+                                    "action": {
+                                        "properties": {
+                                            "duration": {
+                                                "type": "number"
+                                            },
+                                            "meta": {
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "tag": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "type": {
+                                                "enum": [
+                                                    "wait"
+                                                ],
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            {
+                                "properties": {
+                                    "action": {
+                                        "properties": {
+                                            "location": {
+                                                "properties": {
+                                                    "regexp": {
+                                                        "type": "string"
+                                                    },
+                                                    "value": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "meta": {
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "tag": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "type": {
+                                                "enum": [
+                                                    "ensure"
+                                                ],
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            {
+                                "properties": {
+                                    "action": {
+                                        "properties": {
+                                            "form": {
+                                                "properties": {
+                                                    "constrains": {
+                                                        "properties": {
+                                                            "required": {
+                                                                "type": "boolean"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "selector": {
+                                                        "type": "string"
+                                                    },
+                                                    "value": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "meta": {
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "tag": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "type": {
+                                                "enum": [
+                                                    "radio"
+                                                ],
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            {
+                                "properties": {
+                                    "action": {
+                                        "properties": {
+                                            "fullPage": {
+                                                "type": "boolean"
+                                            },
+                                            "meta": {
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "tag": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "type": {
+                                                "enum": [
+                                                    "screenshot"
+                                                ],
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            {
+                                "properties": {
+                                    "action": {
+                                        "properties": {
+                                            "meta": {
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "tag": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "type": {
+                                                "enum": [
+                                                    "goto"
+                                                ],
+                                                "type": "string"
+                                            },
+                                            "url": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            {
+                                "properties": {
+                                    "action": {
+                                        "properties": {
+                                            "meta": {
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "tag": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "selector": {
+                                                "type": "string"
+                                            },
+                                            "type": {
+                                                "enum": [
+                                                    "clear"
+                                                ],
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            {
+                                "properties": {
+                                    "action": {
+                                        "properties": {
+                                            "meta": {
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "tag": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "type": {
+                                                "enum": [
+                                                    "dump"
+                                                ],
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        ]
+                    },
+                    "type": "array"
+                },
+                "url": {
+                    "description": "最初にブラウザで開くURL",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "skip": {
+            "description": "`true` のとき当該のファイルのシナリオの実行をskipする",
+            "type": "boolean"
+        },
+        "steps": {
+            "description": "mainのscenarioを記述する. iterationが指定されている場合は, この中を繰り返す.",
+            "items": {
+                "anyOf": [
+                    {
+                        "properties": {
+                            "action": {
+                                "properties": {
+                                    "form": {
+                                        "properties": {
+                                            "constrains": {
+                                                "description": "valueかconstrainsのどちらか片方しか指定できない.\n任意の文字列を入力したい場合はvalueを, 与えた正規表現から任意の文字列を入力したい場合はconstraintsを使う",
+                                                "properties": {
+                                                    "regexp": {
+                                                        "description": "正規表現を満たすような文字列を自動で出力する.\n\n### example\n```yaml\n- action:\n   type: input\n   form:\n     selector: 'input[name=\"email\"]'\n     constrains:\n       regexp: '([a-z]|[0-9]){5,10}@test\\.com'\n```",
+                                                        "type": "string"
+                                                    },
+                                                    "required": {
+                                                        "type": "boolean"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "selector": {
+                                                "description": "css selector",
+                                                "type": "string"
+                                            },
+                                            "value": {
+                                                "anyOf": [
+                                                    {
+                                                        "properties": {
+                                                            "faker": {
+                                                                "description": "[faker](https://www.npmjs.com/package/faker) を使う時に使用する.\n\n### example\n```yaml\n- action:\n   type: input\n   form:\n     selector: 'input[name=\"address\"]'\n     value:\n       faker: address.city\n```",
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    {
+                                                        "properties": {
+                                                            "date": {
+                                                                "description": "input type=\"date\"に入力する場合に使う.\n\n### example\n```yaml\n- action:\n   type: input\n   form:\n     selector: 'input[name=\"birthday\"]'\n     value:\n       date: \"1989-04-01\"\n```",
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    {
+                                                        "type": "string"
+                                                    }
+                                                ],
+                                                "description": "valueかconstrainsのどちらか片方しか指定できない.\n任意の文字列を入力したい場合はvalueを, 与えた正規表現から任意の文字列を入力したい場合はconstraintsを使う"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "meta": {
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "tag": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "type": {
+                                        "enum": [
+                                            "input"
+                                        ],
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    {
+                        "properties": {
+                            "action": {
+                                "properties": {
+                                    "emulateMouse": {
+                                        "type": "boolean"
+                                    },
+                                    "meta": {
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "tag": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "navigation": {
+                                        "type": "boolean"
+                                    },
+                                    "selector": {
+                                        "type": "string"
+                                    },
+                                    "type": {
+                                        "enum": [
+                                            "click"
+                                        ],
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    {
+                        "properties": {
+                            "action": {
+                                "properties": {
+                                    "form": {
+                                        "properties": {
+                                            "constrains": {
+                                                "properties": {
+                                                    "required": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "values": {
+                                                        "items": {
+                                                            "anyOf": [
+                                                                {
+                                                                    "properties": {
+                                                                        "faker": {
+                                                                            "description": "[faker](https://www.npmjs.com/package/faker) を使う時に使用する.\n\n### example\n```yaml\n- action:\n   type: input\n   form:\n     selector: 'input[name=\"address\"]'\n     value:\n       faker: address.city\n```",
+                                                                            "type": "string"
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
+                                                                },
+                                                                {
+                                                                    "properties": {
+                                                                        "date": {
+                                                                            "description": "input type=\"date\"に入力する場合に使う.\n\n### example\n```yaml\n- action:\n   type: input\n   form:\n     selector: 'input[name=\"birthday\"]'\n     value:\n       date: \"1989-04-01\"\n```",
+                                                                            "type": "string"
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
+                                                                },
+                                                                {
+                                                                    "type": "string"
+                                                                }
+                                                            ]
+                                                        },
+                                                        "type": "array"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "selector": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "meta": {
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "tag": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "type": {
+                                        "enum": [
+                                            "select"
+                                        ],
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    {
+                        "properties": {
+                            "action": {
+                                "properties": {
+                                    "duration": {
+                                        "type": "number"
+                                    },
+                                    "meta": {
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "tag": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "type": {
+                                        "enum": [
+                                            "wait"
+                                        ],
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    {
+                        "properties": {
+                            "action": {
+                                "properties": {
+                                    "location": {
+                                        "properties": {
+                                            "regexp": {
+                                                "type": "string"
+                                            },
+                                            "value": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "meta": {
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "tag": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "type": {
+                                        "enum": [
+                                            "ensure"
+                                        ],
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    {
+                        "properties": {
+                            "action": {
+                                "properties": {
+                                    "form": {
+                                        "properties": {
+                                            "constrains": {
+                                                "properties": {
+                                                    "required": {
+                                                        "type": "boolean"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "selector": {
+                                                "type": "string"
+                                            },
+                                            "value": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "meta": {
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "tag": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "type": {
+                                        "enum": [
+                                            "radio"
+                                        ],
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    {
+                        "properties": {
+                            "action": {
+                                "properties": {
+                                    "fullPage": {
+                                        "type": "boolean"
+                                    },
+                                    "meta": {
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "tag": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "type": {
+                                        "enum": [
+                                            "screenshot"
+                                        ],
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    {
+                        "properties": {
+                            "action": {
+                                "properties": {
+                                    "meta": {
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "tag": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "type": {
+                                        "enum": [
+                                            "goto"
+                                        ],
+                                        "type": "string"
+                                    },
+                                    "url": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    {
+                        "properties": {
+                            "action": {
+                                "properties": {
+                                    "meta": {
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "tag": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "selector": {
+                                        "type": "string"
+                                    },
+                                    "type": {
+                                        "enum": [
+                                            "clear"
+                                        ],
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    {
+                        "properties": {
+                            "action": {
+                                "properties": {
+                                    "meta": {
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "tag": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "type": {
+                                        "enum": [
+                                            "dump"
+                                        ],
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "type": "array"
+        },
+        "url": {
+            "description": "最初にブラウザで開くURL.\npreconditionが設定されている場合は, preconditionの実行終了時に遷移する.",
+            "type": "string"
+        }
+    },
+    "type": "object"
+}
+
