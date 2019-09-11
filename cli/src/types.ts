@@ -40,9 +40,6 @@ export type ActionHandler<T extends ActionName, E extends BrowserType> = (
   options?: { imageDir: PathLike; browserType: E; context: Context }
 ) => Promise<any>;
 
-/**
- * @summary test
- */
 export type Scenario = {
   /**
    *  `true` のとき当該のファイルのシナリオの実行をskipする
@@ -64,7 +61,7 @@ export type Scenario = {
   /**
    * mainのaction(steps)を実行する前に実行するaction. login処理などで用いる.
    *
-   * ### example
+   * ##### example
    * ```yaml
    * name: login
    * iteration: 1
@@ -146,7 +143,7 @@ type Value =
   /**
    * formに直接文字列を入力する
    *
-   * ### example
+   * ##### example
    * ```yaml
    *  - action:
    *    type: input
@@ -160,7 +157,7 @@ type Value =
       /**
        * [faker](https://www.npmjs.com/package/faker) を使う時に使用する.
        *
-       * ### example
+       * ##### example
        * ```yaml
        * - action:
        *   type: input
@@ -176,7 +173,7 @@ type Value =
       /**
        * input type="date"に入力する場合に使う.
        *
-       * ### example
+       * ##### example
        * ```yaml
        * - action:
        *   type: input
@@ -235,7 +232,7 @@ type Constrains = {
   /**
    * 正規表現を満たすような文字列を自動で出力する.
    *
-   * ### example
+   * ##### example
    * ```yaml
    * - action:
    *   type: input
@@ -253,25 +250,25 @@ type ActionMeta = {
   tag?: string;
 };
 
-/**
- * input type=form, dateもしくはtextareaに対する入力を行う.
- *
- * ### example
- * ```yaml
- * - action:
- *   type: input
- *   form:
- *     selector: 'input[name="email"]'
- *     constrains:
- *       regexp: '([a-z]|[0-9]){5,10}@test\.com'
- * - action:
- *   type: input
- *   form:
- *     selector: 'input[name="name"]'
- *     value: "name"
- * ```
- */
 export type InputAction = {
+  /**
+   * input type=form, dateもしくはtextareaに対する入力を行う.
+   *
+   * ##### example
+   * ```yaml
+   * - action:
+   *   type: input
+   *   form:
+   *     selector: 'input[name="email"]'
+   *     constrains:
+   *       regexp: '([a-z]|[0-9]){5,10}@test\.com'
+   * - action:
+   *   type: input
+   *   form:
+   *     selector: 'input[name="name"]'
+   *     value: "name"
+   * ```
+   */
   action: {
     meta?: ActionMeta;
     type: "input";
@@ -295,16 +292,65 @@ export type InputAction = {
 };
 
 export type ClickAction = {
+  /**
+   * HTMLのelementをclickする
+   *
+   * ##### example
+   * ```yaml
+   * - action:
+   *   type: click
+   *   selector: 'button[name="applyButton"]'
+   *   navigation: true
+   * ```
+   */
   action: {
     meta?: ActionMeta;
     type: "click";
+    /**
+     * css selector
+     */
     selector: string;
+    /**
+     * Chome only
+     * linkをクリックする際に使う.
+     * pageのnavigationが発生するまでwaitする.
+     *
+     * ##### example
+     * ```yaml
+     * - action:
+     *   type: click
+     *   selector: 'button[name="applyButton"]'
+     *   navigation: true
+     * ```
+     */
     navigation: boolean;
+    /**
+     * Chrome only
+     * 指定されたelementの座標の上でmouseのclickイベントを発火させる.
+     */
     emulateMouse: boolean;
   };
 };
 
 export type SelectAction = {
+  /**
+   * Select Boxを操作するaction
+   * valuesで指定した中からランダムに選ばれる
+   *
+   * ##### example
+   * ```yaml
+   * - action:
+   *   type: select
+   *   form:
+   *     selector: 'select[name="prefecture"]'
+   *     constrains:
+   *       values:
+   *         - 1
+   *         - 2
+   *         - 3
+   *         - 4
+   * ```
+   */
   action: {
     meta?: ActionMeta;
     type: "select";
@@ -319,6 +365,16 @@ export type SelectAction = {
 };
 
 export type WaitAction = {
+  /**
+   * duration(ms)の間Sleepするaction
+   *
+   * ##### example
+   * ```yaml
+   * - action:
+   *   type: wait
+   *   duration: 1000
+   * ```
+   */
   action: {
     meta?: ActionMeta;
     name?: string;
@@ -328,6 +384,17 @@ export type WaitAction = {
 };
 
 export type ScreenshotAction = {
+  /**
+   * Screenshotを取得するAction
+   * `[browser名]-[timestamp]-[name].png` というファイル名でscreenshotを書き出す
+   *
+   * ##### example
+   * ```yaml
+   * - action:
+   *   type: screenshot
+   *   name: filename
+   * ```
+   */
   action: {
     meta?: ActionMeta;
     type: "screenshot";
@@ -337,6 +404,9 @@ export type ScreenshotAction = {
 };
 
 export type EnsureAction = {
+  /**
+   * urlのlocationがパラメータで与えられたものかどうかをチェックする
+   */
   action: {
     meta?: ActionMeta;
     name?: string;
@@ -349,6 +419,18 @@ export type EnsureAction = {
 };
 
 export type RadioAction = {
+  /**
+   * input type="radio" の操作に使用する
+   *
+   * ##### example
+   * ```yaml
+   * - action:
+   *   type: radio
+   *   form:
+   *     selector: 'input[name="radio-check"]'
+   *     value: false
+   * ```
+   */
   action: {
     meta?: ActionMeta;
     type: "radio";
@@ -371,6 +453,17 @@ export type GotoAction = {
 };
 
 export type ClearAction = {
+  /**
+   * formに入力されている内容をclearする
+   *
+   * ##### example
+   *
+   * ```yaml
+   * - action:
+   *   type: clear
+   *   selector: 'input[name="name"]'
+   * ```
+   **/
   action: {
     meta?: ActionMeta;
     type: "clear";

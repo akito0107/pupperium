@@ -95,6 +95,24 @@ All items must be of the type:
 
 #### action
 
+input type=form, date もしくは textarea に対する入力を行う.
+
+##### example
+
+```yaml
+- action:
+    type: input
+    form:
+      selector: 'input[name="email"]'
+      constrains:
+        regexp: '([a-z]|[0-9]){5,10}@test\.com'
+- action:
+    type: input
+    form:
+      selector: 'input[name="name"]'
+      value: "name"
+```
+
 `action`
 
 - is optional
@@ -150,7 +168,7 @@ value か constrains のどちらか片方しか指定できない. 任意の文
 
 正規表現を満たすような文字列を自動で出力する.
 
-### example
+##### example
 
 ```yaml
 - action:
@@ -220,7 +238,7 @@ value か constrains のどちらか片方しか指定できない. 任意の文
 
 [faker](https://www.npmjs.com/package/faker) を使う時に使用する.
 
-### example
+##### example
 
 ```yaml
 - action:
@@ -252,7 +270,7 @@ value か constrains のどちらか片方しか指定できない. 任意の文
 
 input type="date"に入力する場合に使う.
 
-### example
+##### example
 
 ```yaml
 - action:
@@ -339,6 +357,17 @@ The value of this property **must** be equal to one of the [known values below](
 
 #### action
 
+HTML の element を click する
+
+##### example
+
+```yaml
+- action:
+    type: click
+    selector: 'button[name="applyButton"]'
+    navigation: true
+```
+
 `action`
 
 - is optional
@@ -357,6 +386,8 @@ The value of this property **must** be equal to one of the [known values below](
 | `type`         | string  | Optional |
 
 #### emulateMouse
+
+Chrome only 指定された element の座標の上で mouse の click イベントを発火させる.
 
 `emulateMouse`
 
@@ -407,6 +438,17 @@ The value of this property **must** be equal to one of the [known values below](
 
 #### navigation
 
+Chome only link をクリックする際に使う. page の navigation が発生するまで wait する.
+
+##### example
+
+```yaml
+- action:
+    type: click
+    selector: 'button[name="applyButton"]'
+    navigation: true
+```
+
 `navigation`
 
 - is optional
@@ -417,6 +459,8 @@ The value of this property **must** be equal to one of the [known values below](
 `boolean`
 
 #### selector
+
+css selector
 
 `selector`
 
@@ -451,6 +495,23 @@ The value of this property **must** be equal to one of the [known values below](
 | `action` | object | Optional |
 
 #### action
+
+Select Box を操作する action values で指定した中からランダムに選ばれる
+
+##### example
+
+```yaml
+- action:
+    type: select
+    form:
+      selector: 'select[name="prefecture"]'
+      constrains:
+        values:
+          - 1
+          - 2
+          - 3
+          - 4
+```
 
 `action`
 
@@ -537,7 +598,7 @@ All items must be of the type:
 
 [faker](https://www.npmjs.com/package/faker) を使う時に使用する.
 
-### example
+##### example
 
 ```yaml
 - action:
@@ -569,7 +630,7 @@ All items must be of the type:
 
 input type="date"に入力する場合に使う.
 
-### example
+##### example
 
 ```yaml
 - action:
@@ -666,6 +727,16 @@ The value of this property **must** be equal to one of the [known values below](
 | `action` | object | Optional |
 
 #### action
+
+duration(ms)の間 Sleep する action
+
+##### example
+
+```yaml
+- action:
+    type: wait
+    duration: 1000
+```
 
 `action`
 
@@ -767,6 +838,8 @@ The value of this property **must** be equal to one of the [known values below](
 | `action` | object | Optional |
 
 #### action
+
+url の location がパラメータで与えられたものかどうかをチェックする
 
 `action`
 
@@ -895,6 +968,18 @@ The value of this property **must** be equal to one of the [known values below](
 | `action` | object | Optional |
 
 #### action
+
+input type="radio" の操作に使用する
+
+##### example
+
+```yaml
+- action:
+    type: radio
+    form:
+      selector: 'input[name="radio-check"]'
+      value: false
+```
 
 `action`
 
@@ -1038,6 +1123,16 @@ The value of this property **must** be equal to one of the [known values below](
 | `action` | object | Optional |
 
 #### action
+
+Screenshot を取得する Action `[browser名]-[timestamp]-[name].png` というファイル名で screenshot を書き出す
+
+##### example
+
+```yaml
+- action:
+    type: screenshot
+    name: filename
+```
 
 `action`
 
@@ -1228,6 +1323,16 @@ The value of this property **must** be equal to one of the [known values below](
 | `action` | object | Optional |
 
 #### action
+
+form に入力されている内容を clear する
+
+##### example
+
+```yaml
+- action:
+    type: clear
+    selector: 'input[name="name"]'
+```
 
 `action`
 
@@ -1389,7 +1494,7 @@ The value of this property **must** be equal to one of the [known values below](
 
 main の action(steps)を実行する前に実行する action. login 処理などで用いる.
 
-### example
+##### example
 
 ```yaml
 name: login
@@ -1459,6 +1564,24 @@ All items must be of the type:
 
 #### action
 
+input type=form, date もしくは textarea に対する入力を行う.
+
+##### example
+
+```yaml
+- action:
+    type: input
+    form:
+      selector: 'input[name="email"]'
+      constrains:
+        regexp: '([a-z]|[0-9]){5,10}@test\.com'
+- action:
+    type: input
+    form:
+      selector: 'input[name="name"]'
+      value: "name"
+```
+
 `action`
 
 - is optional
@@ -1514,7 +1637,7 @@ value か constrains のどちらか片方しか指定できない. 任意の文
 
 正規表現を満たすような文字列を自動で出力する.
 
-### example
+##### example
 
 ```yaml
 - action:
@@ -1584,7 +1707,7 @@ value か constrains のどちらか片方しか指定できない. 任意の文
 
 [faker](https://www.npmjs.com/package/faker) を使う時に使用する.
 
-### example
+##### example
 
 ```yaml
 - action:
@@ -1616,7 +1739,7 @@ value か constrains のどちらか片方しか指定できない. 任意の文
 
 input type="date"に入力する場合に使う.
 
-### example
+##### example
 
 ```yaml
 - action:
@@ -1703,6 +1826,17 @@ The value of this property **must** be equal to one of the [known values below](
 
 #### action
 
+HTML の element を click する
+
+##### example
+
+```yaml
+- action:
+    type: click
+    selector: 'button[name="applyButton"]'
+    navigation: true
+```
+
 `action`
 
 - is optional
@@ -1721,6 +1855,8 @@ The value of this property **must** be equal to one of the [known values below](
 | `type`         | string  | Optional |
 
 #### emulateMouse
+
+Chrome only 指定された element の座標の上で mouse の click イベントを発火させる.
 
 `emulateMouse`
 
@@ -1771,6 +1907,17 @@ The value of this property **must** be equal to one of the [known values below](
 
 #### navigation
 
+Chome only link をクリックする際に使う. page の navigation が発生するまで wait する.
+
+##### example
+
+```yaml
+- action:
+    type: click
+    selector: 'button[name="applyButton"]'
+    navigation: true
+```
+
 `navigation`
 
 - is optional
@@ -1781,6 +1928,8 @@ The value of this property **must** be equal to one of the [known values below](
 `boolean`
 
 #### selector
+
+css selector
 
 `selector`
 
@@ -1815,6 +1964,23 @@ The value of this property **must** be equal to one of the [known values below](
 | `action` | object | Optional |
 
 #### action
+
+Select Box を操作する action values で指定した中からランダムに選ばれる
+
+##### example
+
+```yaml
+- action:
+    type: select
+    form:
+      selector: 'select[name="prefecture"]'
+      constrains:
+        values:
+          - 1
+          - 2
+          - 3
+          - 4
+```
 
 `action`
 
@@ -1901,7 +2067,7 @@ All items must be of the type:
 
 [faker](https://www.npmjs.com/package/faker) を使う時に使用する.
 
-### example
+##### example
 
 ```yaml
 - action:
@@ -1933,7 +2099,7 @@ All items must be of the type:
 
 input type="date"に入力する場合に使う.
 
-### example
+##### example
 
 ```yaml
 - action:
@@ -2030,6 +2196,16 @@ The value of this property **must** be equal to one of the [known values below](
 | `action` | object | Optional |
 
 #### action
+
+duration(ms)の間 Sleep する action
+
+##### example
+
+```yaml
+- action:
+    type: wait
+    duration: 1000
+```
 
 `action`
 
@@ -2131,6 +2307,8 @@ The value of this property **must** be equal to one of the [known values below](
 | `action` | object | Optional |
 
 #### action
+
+url の location がパラメータで与えられたものかどうかをチェックする
 
 `action`
 
@@ -2259,6 +2437,18 @@ The value of this property **must** be equal to one of the [known values below](
 | `action` | object | Optional |
 
 #### action
+
+input type="radio" の操作に使用する
+
+##### example
+
+```yaml
+- action:
+    type: radio
+    form:
+      selector: 'input[name="radio-check"]'
+      value: false
+```
 
 `action`
 
@@ -2402,6 +2592,16 @@ The value of this property **must** be equal to one of the [known values below](
 | `action` | object | Optional |
 
 #### action
+
+Screenshot を取得する Action `[browser名]-[timestamp]-[name].png` というファイル名で screenshot を書き出す
+
+##### example
+
+```yaml
+- action:
+    type: screenshot
+    name: filename
+```
 
 `action`
 
@@ -2592,6 +2792,16 @@ The value of this property **must** be equal to one of the [known values below](
 | `action` | object | Optional |
 
 #### action
+
+form に入力されている内容を clear する
+
+##### example
+
+```yaml
+- action:
+    type: clear
+    selector: 'input[name="name"]'
+```
 
 `action`
 
@@ -2804,6 +3014,24 @@ All items must be of the type:
 
 #### action
 
+input type=form, date もしくは textarea に対する入力を行う.
+
+##### example
+
+```yaml
+- action:
+    type: input
+    form:
+      selector: 'input[name="email"]'
+      constrains:
+        regexp: '([a-z]|[0-9]){5,10}@test\.com'
+- action:
+    type: input
+    form:
+      selector: 'input[name="name"]'
+      value: "name"
+```
+
 `action`
 
 - is optional
@@ -2859,7 +3087,7 @@ value か constrains のどちらか片方しか指定できない. 任意の文
 
 正規表現を満たすような文字列を自動で出力する.
 
-### example
+##### example
 
 ```yaml
 - action:
@@ -2929,7 +3157,7 @@ value か constrains のどちらか片方しか指定できない. 任意の文
 
 [faker](https://www.npmjs.com/package/faker) を使う時に使用する.
 
-### example
+##### example
 
 ```yaml
 - action:
@@ -2961,7 +3189,7 @@ value か constrains のどちらか片方しか指定できない. 任意の文
 
 input type="date"に入力する場合に使う.
 
-### example
+##### example
 
 ```yaml
 - action:
@@ -3048,6 +3276,17 @@ The value of this property **must** be equal to one of the [known values below](
 
 #### action
 
+HTML の element を click する
+
+##### example
+
+```yaml
+- action:
+    type: click
+    selector: 'button[name="applyButton"]'
+    navigation: true
+```
+
 `action`
 
 - is optional
@@ -3066,6 +3305,8 @@ The value of this property **must** be equal to one of the [known values below](
 | `type`         | string  | Optional |
 
 #### emulateMouse
+
+Chrome only 指定された element の座標の上で mouse の click イベントを発火させる.
 
 `emulateMouse`
 
@@ -3116,6 +3357,17 @@ The value of this property **must** be equal to one of the [known values below](
 
 #### navigation
 
+Chome only link をクリックする際に使う. page の navigation が発生するまで wait する.
+
+##### example
+
+```yaml
+- action:
+    type: click
+    selector: 'button[name="applyButton"]'
+    navigation: true
+```
+
 `navigation`
 
 - is optional
@@ -3126,6 +3378,8 @@ The value of this property **must** be equal to one of the [known values below](
 `boolean`
 
 #### selector
+
+css selector
 
 `selector`
 
@@ -3160,6 +3414,23 @@ The value of this property **must** be equal to one of the [known values below](
 | `action` | object | Optional |
 
 #### action
+
+Select Box を操作する action values で指定した中からランダムに選ばれる
+
+##### example
+
+```yaml
+- action:
+    type: select
+    form:
+      selector: 'select[name="prefecture"]'
+      constrains:
+        values:
+          - 1
+          - 2
+          - 3
+          - 4
+```
 
 `action`
 
@@ -3246,7 +3517,7 @@ All items must be of the type:
 
 [faker](https://www.npmjs.com/package/faker) を使う時に使用する.
 
-### example
+##### example
 
 ```yaml
 - action:
@@ -3278,7 +3549,7 @@ All items must be of the type:
 
 input type="date"に入力する場合に使う.
 
-### example
+##### example
 
 ```yaml
 - action:
@@ -3375,6 +3646,16 @@ The value of this property **must** be equal to one of the [known values below](
 | `action` | object | Optional |
 
 #### action
+
+duration(ms)の間 Sleep する action
+
+##### example
+
+```yaml
+- action:
+    type: wait
+    duration: 1000
+```
 
 `action`
 
@@ -3476,6 +3757,8 @@ The value of this property **must** be equal to one of the [known values below](
 | `action` | object | Optional |
 
 #### action
+
+url の location がパラメータで与えられたものかどうかをチェックする
 
 `action`
 
@@ -3604,6 +3887,18 @@ The value of this property **must** be equal to one of the [known values below](
 | `action` | object | Optional |
 
 #### action
+
+input type="radio" の操作に使用する
+
+##### example
+
+```yaml
+- action:
+    type: radio
+    form:
+      selector: 'input[name="radio-check"]'
+      value: false
+```
 
 `action`
 
@@ -3747,6 +4042,16 @@ The value of this property **must** be equal to one of the [known values below](
 | `action` | object | Optional |
 
 #### action
+
+Screenshot を取得する Action `[browser名]-[timestamp]-[name].png` というファイル名で screenshot を書き出す
+
+##### example
+
+```yaml
+- action:
+    type: screenshot
+    name: filename
+```
 
 `action`
 
@@ -3937,6 +4242,16 @@ The value of this property **must** be equal to one of the [known values below](
 | `action` | object | Optional |
 
 #### action
+
+form に入力されている内容を clear する
+
+##### example
+
+```yaml
+- action:
+    type: clear
+    selector: 'input[name="name"]'
+```
 
 `action`
 
