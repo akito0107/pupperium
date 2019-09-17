@@ -25,9 +25,11 @@
     "test:e2e": "run-p test:e2e:start-app test:e2e:run-tests",
     "test:e2e:run-tests": "wait-port localhost:3000 && node ./lib/bin/cli.js -p ../e2e/cases -i images && curl -XGET localhost:3000/_kill",
     "test:e2e:run-tests:firefox": "wait-port localhost:3000 && node ./lib/bin/cli.js -b firefox -p ../e2e/cases -i images && curl -XGET localhost:3000/_kill",
-    "test:e2e:start-app": "cd ../e2e; yarn start"
+    "test:e2e:start-app": "cd ../e2e; yarn start",
+    "docs": "rm schema.json && typescript-json-schema tsconfig.json Scenario -o schema.json && jsonschema2md -d schema.json -o docs -h false"
   },
   "devDependencies": {
+    "@adobe/jsonschema2md": "^3.3.0",
     "@types/debug": "^4.1.2",
     "@types/faker": "^4.1.5",
     "@types/jest": "^24.0.11",
@@ -47,6 +49,7 @@
     "tslint-plugin-prettier": "^2.0.1",
     "tslint-react": "^4.0.0",
     "typescript": "^3.3.4",
+    "typescript-json-schema": "^0.40.0",
     "wait-port": "^0.2.2"
   },
   "dependencies": {
