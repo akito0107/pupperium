@@ -37,6 +37,10 @@ program
   )
   .option("-h, --disable-headless", "disable headless mode")
   .option("-b, --browser <targetBrowser>", "target browser (default = chrome)")
+  .option(
+    "--executable-path <executablePath>",
+    "path to a Chromium or Chrome executable to run instead of the bundled Chromium"
+  )
   .option("--puppeteer-args <puppeteerArgs>")
   .parse(process.argv);
 
@@ -58,6 +62,7 @@ type RunningOptions = {
   handlers: { [key in ActionName]: ActionHandler<key, BrowserType> };
   headlessFlag: boolean;
   browserType: BrowserType;
+  executablePath?: string;
 };
 
 async function main(pg) {
@@ -122,7 +127,8 @@ async function pprun({
     imageDir,
     headlessFlag,
     browserType,
-    puppeteerArgs
+    puppeteerArgs,
+    executablePath
   }
 }: {
   file: PathLike;
@@ -160,7 +166,8 @@ async function pprun({
     args,
     headless: headlessFlag,
     ignoreHTTPSErrors: true,
-    defaultViewport: doc.defaultViewport
+    defaultViewport: doc.defaultViewport,
+    executablePath
   };
 
   await run({
